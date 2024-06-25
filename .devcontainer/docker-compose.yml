@@ -1,0 +1,11 @@
+services:
+  environment:
+    build: .
+    tty: true
+    volumes:
+      - ../:/workspace
+      - build_cache:/workspace/.angular
+      - node_modules:/workspace/node_modules
+volumes:
+  build_cache:
+  node_modules:

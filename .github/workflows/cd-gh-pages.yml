@@ -1,0 +1,51 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-upload:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version-file: package.json
+
+    - name: Install Angular CLI
+      run: npm install -g @angular/cli@18
+
+    - name: Install dependencies
+      run: npm ci
+
+    - name: Build
+      run: |
+        REPO=$GITHUB_REPOSITORY
+        OWNER=$(echo $REPO | cut -d / -f 1)
+        REPO_NAME=$(echo $REPO | cut -d / -f 2)
+        ng build --base-href "https://$OWNER.github.io/$REPO_NAME/"
+
+    - name: Upload
+      uses: actions/upload-pages-artifact@v3
+      with:
+        name: dist/ngrx-learning-demo/browser
+  
+  deploy:
+    needs: build-and-upload
+    permissions:
+      contents: write
+      packages: write
+    environment:
+      name: github-pages
+      GITHUB_TOKEN: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+    - name: Deploy to GitHub Pages
+      id: deployment
+      uses: actions/deploy-pages@v4
