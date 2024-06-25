@@ -21,7 +21,7 @@ import { MatInputModule } from '@angular/material/input';
 })
 export class AppComponent {
 
-  isSubscribingSimpleObservable: boolean = false;
+  simpleObservableState: number = 0;
   isMultiSubscribing: boolean = false;
   simpleObserveText: string;
   anotherSimpleObserveText: string;
@@ -45,15 +45,25 @@ export class AppComponent {
     this.behaviorSubjectText = service.initialText;
   }
   
-  onClickStartSimpleObserve(): void {
+  onClickStartSimpleObserve(withError:boolean = false): void {
+    let changeCount: number = 0;
+    this.simpleObservableState = 1;
+
+    // 途中でエラーを発生させるかどうか
+    this.service.withErrorSimpleObservable = withError;
+
     // subscribeすることでObservableが動き出す
     this.service.simpleObservable$.subscribe({
       next: (value) => {
-        this.isSubscribingSimpleObservable = true;
-        this.simpleObserveText = value;
+        changeCount++; // マルチの方にも影響するため、ここでインクリメント
+        this.simpleObserveText = `${changeCount}: ${value}`;
+      },
+      error: (error) => {
+        this.simpleObservableState = 99;
+        this.simpleObserveText = `${error} （待機中）`;
       },
       complete: () => {
-        this.isSubscribingSimpleObservable = false;
+        this.simpleObservableState = 0;
         this.simpleObserveText = this.service.initialText;
       }
     });
@@ -61,7 +71,7 @@ export class AppComponent {
     if(this.isMultiSubscribing) {
       this.service.simpleObservable$.subscribe({
         next: (value) => {
-          this.anotherSimpleObserveText = `マルチ -> ${value}`;
+          this.anotherSimpleObserveText = `マルチ -> ${changeCount}: ${value}`;
         },
         complete: () => {
           this.anotherSimpleObserveText = `マルチ：${this.service.initialText}`;
@@ -70,6 +80,7 @@ export class AppComponent {
     }
   }
 
+  //#region SimpleSubject
   onClickStartSubscribeSimpleSubject(): void {
     let changeCount: number = 1;
     this.simpleSubjectText = `${changeCount}: サブスクライブ中`;
@@ -79,6 +90,10 @@ export class AppComponent {
         this.simpleSubjectState = 1;
         this.simpleSubjectText = `${changeCount}: ${value}`;
         changeCount++;
+      },
+      error: (error) => {
+        this.simpleSubjectState = 99;
+        this.simpleSubjectText = error;
       },
       complete: () => {
         this.simpleSubjectState = 2;
@@ -91,6 +106,10 @@ export class AppComponent {
     this.service.updateSimpleSubject(this.simpleSubjectInputMessagge);
   }
 
+  onClickGenerateErrorToSimpleSubject(): void {
+    this.service.generateErrorSimpleSubject();
+  }
+
   /**
    * コンポーネント側からもSubjectを完了させることができるが、
    * サービスとの依存関係が強くなるため、基本的にはサービス側で完了させるようにする。
@@ -98,7 +117,9 @@ export class AppComponent {
   onClickFinishSimpleSubject(): void {
     this.service.completeSimpleSubject();
   }
+  //#endregion
 
+  //#region BehaviorSubject
   onClickStartSubscribeBehaviorSubject(): void {
     let changeCount: number = 1;
     // subscribeすることでSubjectが動き出す
@@ -129,4 +150,5 @@ export class AppComponent {
   onClickFinishBehaviorSubject(): void {
     this.service.completeBehaviorSubject();
   }
+  //#endregion
 }
