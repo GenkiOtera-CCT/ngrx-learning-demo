@@ -33,6 +33,14 @@ export class AppService {
 
   constructor() { }
 
+  updateSimpleSubject(value: string): void {
+    this.simpleSubject$.next(value);
+  }
+
+  completeSimpleSubject(): void {
+    this.simpleSubject$.complete();
+  }
+
   // デモ用に任意の時間間隔でメッセージを送信する非同期処理
   private async pushMessagesAsync(observer: Subscriber<string>, messages:string[]): Promise<void> {
     for (const message of messages) {

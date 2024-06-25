@@ -4,6 +4,7 @@ import { AppService } from './app.service';
 import { FormsModule } from '@angular/forms';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatButtonModule } from '@angular/material/button';
+import { MatInputModule } from '@angular/material/input';
 
 @Component({
   selector: 'app-root',
@@ -11,6 +12,7 @@ import { MatButtonModule } from '@angular/material/button';
   imports: [
     FormsModule,
     MatButtonModule,
+    MatInputModule,
     MatSlideToggleModule,
     RouterOutlet,
   ],
@@ -19,10 +21,15 @@ import { MatButtonModule } from '@angular/material/button';
 })
 export class AppComponent {
 
-  isSubscribing: boolean = false;
+  isSubscribingSimpleObservable: boolean = false;
   isMultiSubscribing: boolean = false;
   simpleObserveText: string;
   anotherSimpleObserveText: string;
+  
+  simpleSubjectState: number = 0;
+  simpleSubjectText: string;
+  simpleSubjectInputMessagge: string = '';
+
 
   constructor(
     // 待機時間を同期するために敢えてpublicにしているので、参考にしないように。
@@ -30,17 +37,20 @@ export class AppComponent {
   ) {
     this.simpleObserveText = service.initialText;
     this.anotherSimpleObserveText = `マルチ：${service.initialText}`;
+
+    this.simpleSubjectText = service.initialText;
+    this.behaviorSubjectText = service.initialText;
   }
   
   onClickStartSimpleObserve(): void {
     // subscribeすることでObservableが動き出す
     this.service.simpleObservable$.subscribe({
       next: (value) => {
-        this.isSubscribing = true;
+        this.isSubscribingSimpleObservable = true;
         this.simpleObserveText = value;
       },
       complete: () => {
-        this.isSubscribing = false;
+        this.isSubscribingSimpleObservable = false;
         this.simpleObserveText = this.service.initialText;
       }
     });
@@ -55,5 +65,34 @@ export class AppComponent {
         }
       });
     }
+  }
+
+  onClickStartSimpleSubject(): void {
+    let changeCount: number = 1;
+    this.simpleSubjectText = `${changeCount}: サブスクライブ中`;
+    // subscribeすることでSubjectが動き出す
+    this.service.simpleSubject$.subscribe({
+      next: (value) => {
+        this.simpleSubjectState = 1;
+        this.simpleSubjectText = `${changeCount}: ${value}`;
+        changeCount++;
+      },
+      complete: () => {
+        this.simpleSubjectState = 2;
+        this.simpleSubjectText = '終了（※再利用不可）';
+      }
+    });
+  }
+
+  onClickSendMessageToSimpleSubject(): void {
+    this.service.updateSimpleSubject(this.simpleSubjectInputMessagge);
+  }
+
+  /**
+   * コンポーネント側からもSubjectを完了させることができるが、
+   * サービスとの依存関係が強くなるため、基本的にはサービス側で完了させるようにする。
+   **/ 
+  onClickFinishSimpleSubject(): void {
+    this.service.completeSimpleSubject();
   }
 }

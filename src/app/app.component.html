@@ -1,24 +1,54 @@
 <main>
   <div class="main-container">
-    <div class="interval-setting-container">
-      <label>インターバル時間（秒）： </label>
-      <input type="number" [(ngModel)]="service.waitInterval" placeholder="Wait interval seconds">
-    </div>
+    <mat-form-field class="interval-setting-container">
+      <mat-label>インターバル時間（秒）</mat-label>
+      <input matInput type="number" [(ngModel)]="service.waitInterval" placeholder="Wait interval seconds">
+    </mat-form-field>
     <!-- Observable -->
-    <div class="common-container">
-      <label>Simple Observable</label>
-      <mat-slide-toggle [(ngModel)]="isMultiSubscribing">マルチ</mat-slide-toggle>
-      <button mat-stroked-button type="button" (click)="onClickStartSimpleObserve()">サブスクライブ開始</button>
-      @if (isSubscribing) {
-        <img src="assets/images/speak-man.png" alt="speake-man">
-      } @else {
-        <img src="assets/images/wait-man.png" alt="wait-man">
-      }
-      <div class="message-container">
-        <label>{{ simpleObserveText }}</label>
-        @if (isMultiSubscribing) {
-          <label>{{ anotherSimpleObserveText }}</label>
+    <div class="multi-row-container">
+      <div class="row">
+        <label>Simple Observable</label>
+      </div>
+      <div class="row">
+        <mat-slide-toggle [(ngModel)]="isMultiSubscribing">マルチ</mat-slide-toggle>
+        <button mat-stroked-button type="button" (click)="onClickStartSimpleObserve()">サブスクライブ開始</button>
+      </div>
+      <div class="row">
+        @if (isSubscribingSimpleObservable) {
+          <img src="assets/images/speak-man.png" alt="speake-man">
+        } @else {
+          <img src="assets/images/wait-man.png" alt="wait-man">
         }
+        <div class="message-container">
+          <label>{{ simpleObserveText }}</label>
+          @if (isMultiSubscribing) {
+            <label>{{ anotherSimpleObserveText }}</label>
+          }
+        </div>
+      </div>
+    </div>
+    <!-- Subject -->
+    <div class="multi-row-container">
+      <div class="row">
+        <label>Simple Subject</label>
+      </div>
+      <div class="row">
+        <button mat-stroked-button type="button" (click)="onClickStartSimpleSubject()">サブスクライブ開始</button>
+        <mat-form-field class="input-message-field">
+          <input matInput type="text" [(ngModel)]="simpleSubjectInputMessagge" placeholder="言って欲しいこと">
+        </mat-form-field>
+        <button mat-stroked-button type="button" (click)="onClickSendMessageToSimpleSubject()">送信</button>
+        <button mat-stroked-button type="button" (click)="onClickFinishSimpleSubject()">終了</button>
+      </div>
+      <div class="row">
+        @if (simpleSubjectState === 1) {
+          <img src="assets/images/speak-woman.png" alt="speake-woman">
+        } @else if (simpleSubjectState === 2) {
+          <img src="assets/images/finished.png" alt="vacancy">
+        } @else {
+          <img src="assets/images/wait-woman.png" alt="wait-woman">
+        }
+        <label>{{ simpleSubjectText }}</label>
       </div>
     </div>
   </div>
