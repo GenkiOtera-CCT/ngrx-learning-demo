@@ -34,7 +34,7 @@ jobs:
     - name: Upload
       uses: actions/upload-pages-artifact@v3
       with:
-        name: dist/ngrx-learning-demo/browser
+        path: dist/ngrx-learning-demo/browser
   
   deploy:
     needs: build-and-upload
