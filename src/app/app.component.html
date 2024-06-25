@@ -1,8 +1,19 @@
 <main>
   <div class="main-container">
-    <div class="simple-observable-container">
-      <h1>Simple Observable</h1>
-      <img src="assets/images/wait-man.png">
+    <div class="interval-setting-container">
+      <label>インターバル時間（秒）： </label>
+      <input type="number" [(ngModel)]="service.waitInterval" placeholder="Wait interval seconds">
+    </div>
+
+    <div class="common-container">
+      <label>Simple Observable</label>
+      <button type="button" (click)="onClickStartSimpleObserve()">サブスクライブ開始</button>
+      @if (isSubscribing) {
+        <img src="assets/images/speak-man.png" alt="speake-man">
+      } @else {
+        <img src="assets/images/wait-man.png" alt="wait-man">
+      }
+      <label>{{ simpleObserveText }}</label>
     </div>
   </div>
 </main>

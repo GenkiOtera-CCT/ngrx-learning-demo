@@ -1,4 +1,26 @@
-main {
-  width: 100vw;
-  height: 100vh;
+img {
+  width: 100px;
+  height: auto;
+}
+
+.main-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  gap: 100px;
+}
+
+.interval-setting-container {
+  display: flex;
+}
+
+.common-container {
+  height: 150px;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  display: flex;
+  gap: 50px;
 }
