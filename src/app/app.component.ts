@@ -30,6 +30,9 @@ export class AppComponent {
   simpleSubjectText: string;
   simpleSubjectInputMessagge: string = '';
 
+  behaviorSubjectState: number = 0;
+  behaviorSubjectText: string;
+  behaviorSubjectInputMessagge: string = '';
 
   constructor(
     // 待機時間を同期するために敢えてpublicにしているので、参考にしないように。
@@ -67,7 +70,7 @@ export class AppComponent {
     }
   }
 
-  onClickStartSimpleSubject(): void {
+  onClickStartSubscribeSimpleSubject(): void {
     let changeCount: number = 1;
     this.simpleSubjectText = `${changeCount}: サブスクライブ中`;
     // subscribeすることでSubjectが動き出す
@@ -94,5 +97,36 @@ export class AppComponent {
    **/ 
   onClickFinishSimpleSubject(): void {
     this.service.completeSimpleSubject();
+  }
+
+  onClickStartSubscribeBehaviorSubject(): void {
+    let changeCount: number = 1;
+    // subscribeすることでSubjectが動き出す
+    this.service.behaviorSubject$.subscribe({
+      // 値を保持していることを表現するために、初回のnextでは画像を変更しないようにしている。
+      next: (value) => {
+        if(changeCount > 1) {
+          this.behaviorSubjectState = 1;
+        }
+        this.behaviorSubjectText = `${changeCount}: ${value}`;
+        changeCount++;
+      },
+      complete: () => {
+        this.behaviorSubjectState = 2;
+        this.behaviorSubjectText = '終了（※再利用不可）';
+      }
+    });
+  }
+
+  onClickSendMessageToBehaviorSubject(): void {
+    this.service.updateBehaviorSubject(this.behaviorSubjectInputMessagge);
+  }
+
+  /**
+   * コンポーネント側からもSubjectを完了させることができるが、
+   * サービスとの依存関係が強くなるため、基本的にはサービス側で完了させるようにする。
+   **/ 
+  onClickFinishBehaviorSubject(): void {
+    this.service.completeBehaviorSubject();
   }
 }

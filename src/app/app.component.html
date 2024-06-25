@@ -33,7 +33,7 @@
         <label>Simple Subject</label>
       </div>
       <div class="row">
-        <button mat-stroked-button type="button" (click)="onClickStartSimpleSubject()">サブスクライブ開始</button>
+        <button mat-stroked-button type="button" (click)="onClickStartSubscribeSimpleSubject()">サブスクライブ開始</button>
         <mat-form-field class="input-message-field">
           <input matInput type="text" [(ngModel)]="simpleSubjectInputMessagge" placeholder="言って欲しいこと">
         </mat-form-field>
@@ -49,6 +49,30 @@
           <img src="assets/images/wait-woman.png" alt="wait-woman">
         }
         <label>{{ simpleSubjectText }}</label>
+      </div>
+    </div>
+    <!-- BehaviorSubject -->
+    <div class="multi-row-container">
+      <div class="row">
+        <label>BehaviorSubject</label>
+      </div>
+      <div class="row">
+        <button mat-stroked-button type="button" (click)="onClickStartSubscribeBehaviorSubject()">サブスクライブ開始</button>
+        <mat-form-field class="input-message-field">
+          <input matInput type="text" [(ngModel)]="behaviorSubjectInputMessagge" placeholder="言って欲しいこと">
+        </mat-form-field>
+        <button mat-stroked-button type="button" (click)="onClickSendMessageToBehaviorSubject()">送信</button>
+        <button mat-stroked-button type="button" (click)="onClickFinishBehaviorSubject()">終了</button>
+      </div>
+      <div class="row">
+        @if (behaviorSubjectState === 1) {
+          <img src="assets/images/speak-assistant.png" alt="speake-assistant">
+        } @else if (behaviorSubjectState === 2) {
+          <img src="assets/images/finished.png" alt="vacancy">
+        } @else {
+          <img src="assets/images/wait-assistant.png" alt="wait-assistant">
+        }
+        <label>{{ behaviorSubjectText }}</label>
       </div>
     </div>
   </div>
