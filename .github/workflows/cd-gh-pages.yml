@@ -43,7 +43,7 @@ jobs:
       packages: write
     environment:
       name: github-pages
-      GITHUB_TOKEN: ${{ steps.deployment.outputs.page_url }}
+      url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     steps:
     - name: Deploy to GitHub Pages
