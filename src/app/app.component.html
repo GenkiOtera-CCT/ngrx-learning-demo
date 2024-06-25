@@ -4,16 +4,22 @@
       <label>インターバル時間（秒）： </label>
       <input type="number" [(ngModel)]="service.waitInterval" placeholder="Wait interval seconds">
     </div>
-
+    <!-- Observable -->
     <div class="common-container">
       <label>Simple Observable</label>
-      <button type="button" (click)="onClickStartSimpleObserve()">サブスクライブ開始</button>
+      <mat-slide-toggle [(ngModel)]="isMultiSubscribing">マルチ</mat-slide-toggle>
+      <button mat-stroked-button type="button" (click)="onClickStartSimpleObserve()">サブスクライブ開始</button>
       @if (isSubscribing) {
         <img src="assets/images/speak-man.png" alt="speake-man">
       } @else {
         <img src="assets/images/wait-man.png" alt="wait-man">
       }
-      <label>{{ simpleObserveText }}</label>
+      <div class="message-container">
+        <label>{{ simpleObserveText }}</label>
+        @if (isMultiSubscribing) {
+          <label>{{ anotherSimpleObserveText }}</label>
+        }
+      </div>
     </div>
   </div>
 </main>

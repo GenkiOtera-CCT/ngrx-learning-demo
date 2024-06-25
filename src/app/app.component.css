@@ -22,5 +22,12 @@ img {
   align-items: center;
   justify-content: center;
   display: flex;
-  gap: 50px;
+  gap: 20px;
+}
+
+.message-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }

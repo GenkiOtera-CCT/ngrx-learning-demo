@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable, Subscriber } from 'rxjs';
+import { Observable, Subject, Subscriber } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -10,13 +10,13 @@ export class AppService {
   waitInterval: number = 1;
 
   //#region サンプル用のObservableの定義（ただのObservableは事前にsubscribeされた際の処理を定義する）
-  simpleManObservable$ = new Observable<string>((observer) => {
+  simpleObservable$ = new Observable<string>((observer) => {
     const massages: string[] = [
       '1: はじめまして',
       '2: (年齢)30歳',
       '3: (性別)男性',
       '4: (趣味)そば打ち',
-      '5: 以上です。',
+      '5: 以上です',
     ];
     
     // デモ用の非同期処理のため、参考にしないように。
@@ -28,6 +28,8 @@ export class AppService {
     })();
   });
   //#endregion
+
+  simpleSubject$ = new Subject<string>();
 
   constructor() { }
 
