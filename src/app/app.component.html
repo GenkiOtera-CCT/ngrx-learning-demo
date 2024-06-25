@@ -93,6 +93,32 @@
         <label>{{ behaviorSubjectText }}</label>
       </div>
     </div>
+
     <!-- Pipe -->
+    <div class="multi-row-container">
+      <div class="row">
+        <label>Filter Pipe operators</label>
+      </div>
+      <div class="row">
+        <mat-form-field>
+          <mat-label>麦わらの一味</mat-label>
+          <mat-select [value]="selectedCrewId" (selectionChange)="onSelectionCrewChange($event)">
+            @for (crew of crews; track crew) {
+              <mat-option [value]="crew.id">{{crew.name}}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+        <button mat-stroked-button type="button" (click)="onClickResetSelectedCrew()">選択リセット</button>
+      </div>
+      <div class="row">
+        <label>選択が変更されたイベントの結果：{{ selectedCrewId ?? 'null' }}</label>
+      </div>
+      <div class="row">
+        <label>フィルタリングされたイベントの結果：{{ eventValue ?? 'null' }}</label>
+        @if (isShowTheMan) {
+          <img src="assets/images/sanji.png" alt="sanji">
+        }
+      </div>
+    </div>
   </div>
 </main>

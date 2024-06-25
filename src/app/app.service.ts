@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, Subject, Subscriber } from 'rxjs';
+import { BehaviorSubject, Observable, Subject, Subscriber, filter } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -35,6 +35,7 @@ export class AppService {
 
   simpleSubject$ = new Subject<string>();
   behaviorSubject$ = new BehaviorSubject<string>('秘書です。最新のメッセージを記憶できます。');
+  subjectWithPipe$ = new Subject<number>();
 
   constructor() { }
 
@@ -60,6 +61,12 @@ export class AppService {
   completeBehaviorSubject(): void {
     this.behaviorSubject$.complete();
   }
+  //#endregion
+
+  //#region Pipe operators
+  filteredBehaviorSubject$ = this.subjectWithPipe$.pipe(
+    filter(value => value === 2)
+  );
   //#endregion
 
   // デモ用に任意の時間間隔でメッセージを送信する非同期処理

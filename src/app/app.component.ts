@@ -1,12 +1,14 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { AppService } from './app.service';
 import { FormsModule } from '@angular/forms';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
-import { Subject } from 'rxjs';
+import { Subject, Subscription } from 'rxjs';
 import { CommonModule } from '@angular/common';
+import { MatSelectChange, MatSelectModule } from '@angular/material/select';
+import { Crew } from './interfaces/crew';
 
 @Component({
   selector: 'app-root',
@@ -16,13 +18,14 @@ import { CommonModule } from '@angular/common';
     FormsModule,
     MatButtonModule,
     MatInputModule,
+    MatSelectModule,
     MatSlideToggleModule,
     RouterOutlet,
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css',
 })
-export class AppComponent {
+export class AppComponent implements OnDestroy {
 
   simpleObservableState: number = 0;
   isMultiSubscribing: boolean = false;
@@ -39,6 +42,17 @@ export class AppComponent {
 
   simpleSubject$: Subject<string>;
 
+  eventValue?: number;
+  crews: Crew[] = [
+    {id: 0, name: 'ルフィ'},
+    {id: 1, name: 'ゾロ'},
+    {id: 2, name: 'ナミ'}
+  ];
+  selectedCrewId?: number;
+  isShowTheMan: boolean = false;
+
+  private subscriptions: Subscription[] = [];
+
   constructor(
     // 待機時間を同期するために敢えてpublicにしているので、参考にしないように。
     public service: AppService
@@ -50,6 +64,26 @@ export class AppComponent {
     this.behaviorSubjectText = service.initialText;
 
     this.simpleSubject$ = service.simpleSubject$;
+
+    // filterオペレーターの有無で１と２で渡ってくるイベントの違いが分かる。
+    // １：filterオペレーターなし
+    this.subscriptions.push(
+      service.subjectWithPipe$.subscribe((value:number) => {
+        this.selectedCrewId = value;
+      })
+    );
+    // ２：filterオペレーターあり
+    this.subscriptions.push(
+      service.filteredBehaviorSubject$.subscribe((value:number) => {
+        this.eventValue = value;
+        this.isShowTheMan = true;
+      })
+    );
+  }
+
+  ngOnDestroy(): void {
+    console.log('ngOnDestroy');
+    this.subscriptions.forEach(subscription => subscription.unsubscribe());
   }
   
   onClickStartSimpleObserve(withError:boolean = false): void {
@@ -156,6 +190,18 @@ export class AppComponent {
    **/ 
   onClickFinishBehaviorSubject(): void {
     this.service.completeBehaviorSubject();
+  }
+  //#endregion
+
+  //#region Filter pipe operators
+  onClickResetSelectedCrew(): void {
+    this.selectedCrewId = undefined;
+    this.eventValue = undefined;
+    this.isShowTheMan = false;
+  }
+
+  onSelectionCrewChange(event:MatSelectChange): void {
+    this.service.subjectWithPipe$.next(event.value);
   }
   //#endregion
 }
