@@ -5,11 +5,14 @@ import { FormsModule } from '@angular/forms';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
+import { Subject } from 'rxjs';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-root',
   standalone: true,
   imports: [
+    CommonModule,
     FormsModule,
     MatButtonModule,
     MatInputModule,
@@ -34,6 +37,8 @@ export class AppComponent {
   behaviorSubjectText: string;
   behaviorSubjectInputMessagge: string = '';
 
+  simpleSubject$: Subject<string>;
+
   constructor(
     // 待機時間を同期するために敢えてpublicにしているので、参考にしないように。
     public service: AppService
@@ -43,6 +48,8 @@ export class AppComponent {
 
     this.simpleSubjectText = service.initialText;
     this.behaviorSubjectText = service.initialText;
+
+    this.simpleSubject$ = service.simpleSubject$;
   }
   
   onClickStartSimpleObserve(withError:boolean = false): void {
