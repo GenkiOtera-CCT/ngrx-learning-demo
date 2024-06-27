@@ -2,12 +2,18 @@ import { Component } from '@angular/core';
 import { PracticeContentsService } from '../../services/practice-contents.service';
 import { MatButtonModule } from '@angular/material/button';
 import { MessageResponse } from '../../interfaces/api';
+import { MatInputModule } from '@angular/material/input';
+import { FormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-practice-contents.page',
   standalone: true,
   imports: [
+    CommonModule,
+    FormsModule,
     MatButtonModule,
+    MatInputModule,
   ],
   templateUrl: './practice-contents.page.component.html',
   styleUrls: ['./practice-contents.page.component.css']
@@ -15,6 +21,7 @@ import { MessageResponse } from '../../interfaces/api';
 export class PracticeContentsPageComponent {
 
   requestStatuses: string[] = [];
+  successRate: number = 0;
 
   constructor(
     private service: PracticeContentsService
@@ -78,5 +85,27 @@ export class PracticeContentsPageComponent {
       error: () => this.requestStatuses.push('エラー発生'),
       complete: () => this.requestStatuses.push('リクエスト完了（エラー）')
     });
+  }
+
+  onClickFragileRequestButton(withRetry:boolean = false) : void {
+    this.requestStatuses = [];
+    this.requestStatuses.push('リクエスト送信（不安定）');
+    if (withRetry) {
+      this.service.getErrorRequestWithRetry(this.successRate).subscribe({
+        next: (response:MessageResponse) => {
+          this.requestStatuses.push(`レスポンス到着（不安定）: ${response.message}`);
+        },
+        error: () => this.requestStatuses.push('エラー発生'),
+        complete: () => this.requestStatuses.push('リクエスト完了（不安定）')
+      });
+    } else {
+      this.service.getFragileRequest(this.successRate).subscribe({
+        next: (response:MessageResponse) => {
+          this.requestStatuses.push(`レスポンス到着（不安定）: ${response.message}`);
+        },
+        error: () => this.requestStatuses.push('エラー発生'),
+        complete: () => this.requestStatuses.push('リクエスト完了（不安定）')
+      });
+    }
   }
 }

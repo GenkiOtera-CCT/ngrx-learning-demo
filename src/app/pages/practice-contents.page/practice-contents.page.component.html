@@ -12,6 +12,12 @@
     </div>
     <div class="row">
       <button mat-stroked-button type="button" (click)="onClickErrorRequestButton()">エラーAPI</button>
+      <mat-form-field>
+        <mat-label>成功率（10%単位）</mat-label>
+        <input matInput type="number" [(ngModel)]="successRate" placeholder="成功率">
+      </mat-form-field>
+      <button mat-stroked-button type="button" (click)="onClickFragileRequestButton()">不安定API</button>
+      <button mat-stroked-button type="button" (click)="onClickFragileRequestButton(true)">不安定API（リトライ付）</button>
     </div>    
     <div class="row">
       <ul>

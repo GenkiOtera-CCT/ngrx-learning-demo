@@ -20,10 +20,11 @@ export const worker = setupWorker(
         });
     }),
 
-    http.get(`${apiBaseUrl}/fragile`, () => {
-        const rate = 1 / 10;
+    http.get(`${apiBaseUrl}/fragile`, ({ request }) => {
+        const url = new URL(request.url);
+        const successRate = Number(url.searchParams.get('successRate')) / 10;
         const random = Math.random();
-        if (random < rate) {
+        if (random < successRate) {
             return HttpResponse.json({ message: 'Success!' });
         } else {
             return new HttpResponse(null, {

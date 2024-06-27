@@ -24,7 +24,7 @@ export class RepositoryService {
     return this.http.get('api/error');
   }
   
-  getFragileRequest() : Observable<any> {
-    return this.http.get('');
+  getFragileRequest(successRate:number) : Observable<MessageResponse> {
+    return this.http.get<MessageResponse>(`api/fragile?successRate=${successRate}`);
   }
 }
