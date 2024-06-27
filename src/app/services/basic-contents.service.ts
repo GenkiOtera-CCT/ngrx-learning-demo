@@ -4,7 +4,7 @@ import { BehaviorSubject, Observable, Subject, Subscriber, filter } from 'rxjs';
 @Injectable({
   providedIn: 'root'
 })
-export class AppService {
+export class BasicContentsService {
 
   readonly initialText: string = '0: 待機中';
   waitInterval: number = 1;
@@ -37,7 +37,7 @@ export class AppService {
   behaviorSubject$ = new BehaviorSubject<string>('秘書です。最新のメッセージを記憶できます。');
   subjectWithPipe$ = new Subject<number>();
 
-  constructor() { }
+  constructor() {}
 
   //#region SimpleSubject
   updateSimpleSubject(value: string): void {
