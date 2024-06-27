@@ -3,34 +3,9 @@ img {
   height: auto;
 }
 
-.main-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 100px;
-  padding-top: 5%;
-  padding-bottom: 20%;
-}
-
 .message-container {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-}
-
-.multi-row-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-}
-
-.row {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 20px;
 }
