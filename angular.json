@@ -56,7 +56,8 @@
                 "glob": "**/*",
                 "input": "src/assets",
                 "output": "/assets"
-              }
+              },
+              "src/msw/mockServiceWorker.js"
             ],
             "styles": [
               "src/custom-theme.scss",
