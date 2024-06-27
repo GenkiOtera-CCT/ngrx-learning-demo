@@ -81,7 +81,6 @@ export class BasicContentsPageComponent implements OnDestroy {
   }
 
   ngOnDestroy(): void {
-    console.log('ngOnDestroy');
     this.subscriptions.forEach(subscription => subscription.unsubscribe());
   }
   

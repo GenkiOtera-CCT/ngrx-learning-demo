@@ -47,16 +47,20 @@ import { Router, RouterOutlet } from '@angular/router';
   `]
 })
 export class AppComponent {
-
-  constructor(
-    private router: Router
-  ) {}
-
+  
   childRoutes: string[] = [
     'basic',
     'practice',
   ];
-  selectedChildRoute: string = this.childRoutes[0];
+  selectedChildRoute: string;
+
+  constructor(
+    private router: Router
+  ) {
+    const paths:string[] = window.location.href.split('/');
+    const lastPath:string = paths[paths.length - 1];
+    this.selectedChildRoute = this.childRoutes.includes(lastPath) ? lastPath : this.childRoutes[0];
+  }
 
   onChangeChildRoute(event: MatButtonToggleChange) {
     this.router.navigate([`/${event.value}`]);
