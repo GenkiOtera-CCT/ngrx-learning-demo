@@ -1,0 +1,24 @@
+.json-card {
+    margin: 20px;
+    padding: 20px 40px;
+}
+
+.scrollable-card {
+    height: 300px;
+    display: flex;
+}
+
+.scrollable-container {
+    overflow: auto;
+    flex: 1;
+}
+
+.id-input-field {
+    margin-left: 20px;
+    width: 70px;
+}
+
+.isDisabled {
+    color: #999; /* グレーアウトの色 */
+    background-color: #f0f0f0; /* 背景色を薄く */
+}

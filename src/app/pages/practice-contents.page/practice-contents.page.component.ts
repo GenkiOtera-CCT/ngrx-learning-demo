@@ -5,6 +5,12 @@ import { MessageResponse } from '../../interfaces/api';
 import { MatInputModule } from '@angular/material/input';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { MatCardModule } from '@angular/material/card';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatRadioModule } from '@angular/material/radio';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { DisplayId } from '../../interfaces';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-practice-contents.page',
@@ -13,6 +19,10 @@ import { CommonModule } from '@angular/common';
     CommonModule,
     FormsModule,
     MatButtonModule,
+    MatCardModule,
+    MatCheckboxModule,
+    MatFormFieldModule,
+    MatRadioModule,
     MatInputModule,
   ],
   templateUrl: './practice-contents.page.component.html',
@@ -23,10 +33,21 @@ export class PracticeContentsPageComponent {
   requestStatuses: string[] = [];
   successRate: number = 0;
 
+  modelA$ = this.service.modelA$;
+  modelB$ = this.service.modelB$;
+  displayableParentIds$:Observable<DisplayId[]> = this.service.getDisplayableParentIds();
+  displayableChildIds$:Observable<DisplayId[]> = this.service.getDisplayableChildIds();
+
+  addingParentId: number = 0;
+  addingChildId: number = 0;
+  addingDisableId: number = 0;
+  addingHiddenId: number = 0;
+
   constructor(
     private service: PracticeContentsService
   ) {}
 
+  //#region HTTP
   onClickShortTimeRequestButton() : void {
     this.requestStatuses = [];
     this.requestStatuses.push(`リクエスト送信（ショート）`);
@@ -108,4 +129,44 @@ export class PracticeContentsPageComponent {
       });
     }
   }
+  //#endregion
+
+  //#region Model Display
+  onClickAddIdButton(idType:string) : void {
+    switch (idType) {
+      case 'parent':
+        this.service.addParentId(this.addingParentId);
+        break;
+      case 'child':
+        if(this.addingChildId < 1) return;
+        this.service.addChildId(this.addingChildId);
+        break;
+      case 'disable':
+        if(this.addingDisableId < 1) return;
+        this.service.addDisableId(this.addingDisableId);
+        break;
+      case 'hidden':
+        if(this.addingHiddenId < 1) return;
+        this.service.addHiddenId(this.addingHiddenId);
+        break;
+    }
+  }
+
+  onClickRemoveIdButton(idType:string, value:number) : void {
+    switch (idType) {
+      case 'parent':
+        this.service.removeParentId(value);
+        break;
+      case 'child':
+        this.service.removeChildId(value);
+        break;
+      case 'disable':
+        this.service.removeDisableId(value);
+        break;
+      case 'hidden':
+        this.service.removeHiddenId(value);
+        break;
+    }
+  }
+  //#endregion
 }
