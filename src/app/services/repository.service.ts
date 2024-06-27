@@ -21,7 +21,7 @@ export class RepositoryService {
   }
 
   getErrorRequest() : Observable<any> {
-    return this.http.get('');
+    return this.http.get('api/error');
   }
   
   getFragileRequest() : Observable<any> {

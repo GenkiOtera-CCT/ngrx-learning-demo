@@ -11,6 +11,9 @@
       <button mat-stroked-button type="button" (click)="onClickJoinedRequestButton()">即レス＆亀レス（結合）</button>
     </div>
     <div class="row">
+      <button mat-stroked-button type="button" (click)="onClickErrorRequestButton()">エラーAPI</button>
+    </div>    
+    <div class="row">
       <ul>
         @for (requestStatus of requestStatuses; track requestStatus) {
           <li>{{ requestStatus }}</li>

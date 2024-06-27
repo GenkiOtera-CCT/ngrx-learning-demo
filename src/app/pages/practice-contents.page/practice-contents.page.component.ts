@@ -67,4 +67,16 @@ export class PracticeContentsPageComponent {
       complete: () => this.requestStatuses.push('リクエスト完了（結合）')
     });
   }
+
+  onClickErrorRequestButton() : void {
+    this.requestStatuses = [];
+    this.requestStatuses.push('リクエスト送信（エラー）');
+    this.service.getErrorRequest().subscribe({
+      next: (response:any) => {
+        this.requestStatuses.push(`レスポンス到着（エラー）: ${response.message}`);
+      },
+      error: () => this.requestStatuses.push('エラー発生'),
+      complete: () => this.requestStatuses.push('リクエスト完了（エラー）')
+    });
+  }
 }

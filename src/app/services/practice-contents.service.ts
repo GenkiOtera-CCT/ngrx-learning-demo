@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { RepositoryService } from './repository.service';
-import { Observable, concat, concatMap, forkJoin, merge } from 'rxjs';
+import { Observable, concat, forkJoin } from 'rxjs';
 import { MessageResponse } from '../interfaces/api';
 
 @Injectable({
@@ -25,11 +25,15 @@ export class PracticeContentsService {
       this.getLongTimeRequest()
     );
   }
-  
+
   getJoinedRequest() : Observable<[MessageResponse, MessageResponse]> {
     return forkJoin([
       this.getShortTimeRequest(),
       this.getLongTimeRequest()
     ]);
+  }
+
+  getErrorRequest() : Observable<any> {
+    return this.repository.getErrorRequest();
   }
 }
