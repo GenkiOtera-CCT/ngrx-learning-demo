@@ -112,6 +112,17 @@
       </div>
       <div class="row">
         <label>選択が変更されたイベントの結果：{{ selectedCrewId ?? 'null' }}</label>
+        @switch (selectedCrewId) {
+          @case (0) {
+            <img src="assets/images/luffy.png" alt="luffy">
+          }
+          @case (1) {
+            <img src="assets/images/zoro.png" alt="zoro">
+          }
+          @case (2) {
+            <img src="assets/images/nami.png" alt="nami">
+          }
+        }
       </div>
       <div class="row">
         <label>フィルタリングされたイベントの結果：{{ eventValue ?? 'null' }}</label>
