@@ -1,3 +1,21 @@
-<p>
-  practice-contents.page works!
-</p>
+<div class="main-container">
+  <!-- Observable -->
+  <div class="multi-row-container">
+    <div class="row">
+      <label>HTTP</label>
+    </div>
+    <div class="row">
+      <button mat-stroked-button type="button" (click)="onClickShortTimeRequestButton()">即レスAPI</button>
+      <button mat-stroked-button type="button" (click)="onClickLongTimeRequestButton()">亀レスAPI</button>
+      <button mat-stroked-button type="button" (click)="onClickOrderedRequestButton()">即レス＆亀レス（順番）</button>
+      <button mat-stroked-button type="button" (click)="onClickJoinedRequestButton()">即レス＆亀レス（結合）</button>
+    </div>
+    <div class="row">
+      <ul>
+        @for (requestStatus of requestStatuses; track requestStatus) {
+          <li>{{ requestStatus }}</li>
+        }
+      </ul>
+    </div>
+  </div>
+</div>

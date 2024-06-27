@@ -9,7 +9,7 @@ export const worker = setupWorker(
     }),
 
     http.get(`${apiBaseUrl}/long`, async () => {
-        await delay(5000);
+        await delay(2000);
         return HttpResponse.json({ message: 'Long time request' });
     }),
 
