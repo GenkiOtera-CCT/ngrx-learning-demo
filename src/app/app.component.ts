@@ -117,7 +117,6 @@ export class AppComponent implements OnDestroy {
         complete: () => {
           this.anotherSimpleObserveText = `マルチ：${this.service.initialText}`;
         }
-      });
     }
   }
 
