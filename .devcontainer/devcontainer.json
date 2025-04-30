@@ -24,7 +24,8 @@
   "customizations": {
     "vscode": {
       "extensions": [
-        "angular.ng-template"
+        "angular.ng-template",
+        "github.vscode-github-actions"
       ]
     }
   }
