@@ -1,9 +1,26 @@
 {
   "name": "RxJs-learning-demo",
-  "dockerComposeFile": "docker-compose.yml",
-  "service": "environment",
-  "workspaceFolder": "/workspace",
-  "postCreateCommand": "npm install",
+  "runArgs": ["--name", "ngrx-learning-demo"], // コンテナ名を指定
+  "image": "mcr.microsoft.com/devcontainers/base:jammy",
+  "features": {
+		"ghcr.io/devcontainers/features/node:1": {
+			"version": "22"
+		}
+	},
+  "mounts": [
+    {
+      "source": "${localWorkspaceFolderBasename}-build_cache",
+      "target": "${containerWorkspaceFolder}/.angular",
+      "type": "volume"
+    },
+		{
+			"source": "${localWorkspaceFolderBasename}-node_modules",
+			"target": "${containerWorkspaceFolder}/node_modules",
+			"type": "volume"
+		}
+	],
+	"remoteUser": "root",
+  "postCreateCommand": "npm install -g @angular/cli && npm install",
   "customizations": {
     "vscode": {
       "extensions": [
