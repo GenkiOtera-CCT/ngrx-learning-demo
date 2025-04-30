@@ -13,20 +13,19 @@ import { DisplayId } from '../../interfaces';
 import { Observable } from 'rxjs';
 
 @Component({
-  selector: 'app-practice-contents.page',
-  standalone: true,
-  imports: [
-    CommonModule,
-    FormsModule,
-    MatButtonModule,
-    MatCardModule,
-    MatCheckboxModule,
-    MatFormFieldModule,
-    MatRadioModule,
-    MatInputModule,
-  ],
-  templateUrl: './practice-contents.page.component.html',
-  styleUrls: ['./practice-contents.page.component.css']
+    selector: 'app-practice-contents.page',
+    imports: [
+        CommonModule,
+        FormsModule,
+        MatButtonModule,
+        MatCardModule,
+        MatCheckboxModule,
+        MatFormFieldModule,
+        MatRadioModule,
+        MatInputModule,
+    ],
+    templateUrl: './practice-contents.page.component.html',
+    styleUrls: ['./practice-contents.page.component.css']
 })
 export class PracticeContentsPageComponent {
 

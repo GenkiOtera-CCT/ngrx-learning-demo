@@ -12,18 +12,17 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 
 @Component({
-  selector: 'app-basic-contents.page',
-  standalone: true,
-  imports: [
-    CommonModule,
-    FormsModule,
-    MatButtonModule,
-    MatInputModule,
-    MatSelectModule,
-    MatSlideToggleModule,
-  ],
-  templateUrl: './basic-contents.page.component.html',
-  styleUrl: './basic-contents.page.component.css',
+    selector: 'app-basic-contents.page',
+    imports: [
+        CommonModule,
+        FormsModule,
+        MatButtonModule,
+        MatInputModule,
+        MatSelectModule,
+        MatSlideToggleModule,
+    ],
+    templateUrl: './basic-contents.page.component.html',
+    styleUrl: './basic-contents.page.component.css'
 })
 export class BasicContentsPageComponent implements OnDestroy {
   simpleObservableState: number = 0;

@@ -4,15 +4,14 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { Router, RouterOutlet } from '@angular/router';
 
 @Component({
-  selector: 'app-root',
-  standalone: true,
-  imports: [
-    RouterOutlet,
-    MatToolbarModule,
-    MatButtonToggleModule,
-  ],
-  providers: [],
-  template: `
+    selector: 'app-root',
+    imports: [
+        RouterOutlet,
+        MatToolbarModule,
+        MatButtonToggleModule,
+    ],
+    providers: [],
+    template: `
     <header>
       <mat-toolbar>
         <span>NgrxLearningDemo</span>
@@ -32,7 +31,7 @@ import { Router, RouterOutlet } from '@angular/router';
       <router-outlet/>
     </main>
   `,
-  styles: [`
+    styles: [`
     mat-toolbar {
       display: flex;
       gap: 10px;
