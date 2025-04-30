@@ -27,153 +27,155 @@
       </ul>
     </div>
   </div>
-  <div class="multi-row-container">
-    <div class="row">
-      <label>Subject Model</label>
-    </div>
-    <div class="row">
-      <mat-card appearance="outlined" class="json-card">
-        <mat-card-header>
-          <mat-card-title>モデルA</mat-card-title>
-        </mat-card-header>
-        <pre>{{ modelA$ | async | json }}</pre>
-      </mat-card>
-      <mat-card appearance="outlined" class="json-card">
-        <mat-card-header>
-          <mat-card-title>モデルB</mat-card-title>
-        </mat-card-header>
-        <pre>{{ modelB$ | async | json }}</pre>
-      </mat-card>
-    </div>
-    <div class="row">
-      <!-- 親IDリスト -->
-      <mat-card appearance="outlined" class="scrollable-card">
-        <mat-card-header>
-          <mat-card-title>親ID</mat-card-title>
-        </mat-card-header>
-        <mat-card-content class="scrollable-container">
-          @if (modelA$ | async; as modelA) {
-            <ul>
-              @for (parentId of modelA.parentIds; track parentId) {
-                <li>
-                  {{ parentId }}
-                  <button mat-button type="button" (click)="onClickRemoveIdButton('parent', parentId)">削除</button>
-                </li>
-              }
-            </ul>
-          }
-        </mat-card-content>
-        <mat-card-footer>
-          <mat-form-field class="id-input-field">
-            <input matInput type="number" [(ngModel)]="addingParentId" placeholder="追加親ID">
-          </mat-form-field>
-          <button mat-button [disabled]="addingParentId < 1" type="button" (click)="onClickAddIdButton('parent')">追加</button>
-        </mat-card-footer>
-      </mat-card>
-      <!-- 子IDリスト -->
-      <mat-card appearance="outlined" class="scrollable-card">
-        <mat-card-header>
-          <mat-card-title>子ID</mat-card-title>
-        </mat-card-header>
-        <mat-card-content class="scrollable-container">
-          @if (modelA$ | async; as modelA) {
-            <ul>
-              @for (chiledId of modelA.chiledIds; track chiledId) {
-                <li>
-                  {{ chiledId }}
-                  <button mat-button type="button" (click)="onClickRemoveIdButton('child', chiledId)">削除</button>
-                </li>
-              }
-            </ul>
-          }
-        </mat-card-content>
-        <mat-card-footer>
-          <mat-form-field class="id-input-field">
-            <input matInput type="number" [(ngModel)]="addingChildId" placeholder="追加子ID">
-          </mat-form-field>
-          <button mat-button [disabled]="addingChildId < 1" type="button" (click)="onClickAddIdButton('child')">追加</button>
-        </mat-card-footer>
-      </mat-card>
-      <!-- 無効IDリスト -->
-      <mat-card appearance="outlined" class="scrollable-card">
-        <mat-card-header>
-          <mat-card-title>無効ID</mat-card-title>
-        </mat-card-header>
-        <mat-card-content class="scrollable-container">
-          @if (modelB$ | async; as modelB) {
-            <ul>
-              @for (disableId of modelB.disableIds; track disableId) {
-                <li>
-                  {{ disableId }}
-                  <button mat-button type="button" (click)="onClickRemoveIdButton('disable', disableId)">削除</button>
-                </li>
-              }
-            </ul>
-          }
-        </mat-card-content>
-        <mat-card-footer>
-          <mat-form-field class="id-input-field">
-            <input matInput type="number" [(ngModel)]="addingDisableId" placeholder="追加無効ID">
-          </mat-form-field>
-          <button mat-button [disabled]="addingDisableId < 1" type="button" (click)="onClickAddIdButton('disable')">追加</button>
-        </mat-card-footer>
-      </mat-card>
-      <!-- 非表示IDリスト -->
-      <mat-card appearance="outlined" class="scrollable-card">
-        <mat-card-header>
-          <mat-card-title>非表示ID</mat-card-title>
-        </mat-card-header>
-        <mat-card-content class="scrollable-container">
-          @if (modelB$ | async; as modelB) {
-            <ul>
-              @for (hiddenId of modelB.hiddenIds; track hiddenId) {
-                <li>
-                  {{ hiddenId }}
-                  <button mat-button type="button" (click)="onClickRemoveIdButton('hidden', hiddenId)">削除</button>
-                </li>
-              }
-            </ul>
-          }
-        </mat-card-content>
-        <mat-card-footer>
-          <mat-form-field class="id-input-field">
-            <input matInput type="number" [(ngModel)]="addingHiddenId" placeholder="追加非表示ID">
-          </mat-form-field>
-          <button mat-button [disabled]="addingHiddenId < 1" type="button" (click)="onClickAddIdButton('hidden')">追加</button>
-        </mat-card-footer>
-      </mat-card>
-    </div>
-    <div class="row">
-      <!-- 親ID（最終表示）リスト -->
-      <mat-card appearance="outlined" class="scrollable-card">
-        <mat-card-header>
-          <mat-card-title>親ID（最終表示）</mat-card-title>
-        </mat-card-header>
-        <mat-card-content class="scrollable-container">
-          <ul>
-            @for (displayableParentId of displayableParentIds$ | async; track displayableParentId) {
-              <li [ngClass]="{ isDisabled: displayableParentId.isDisabled }">
-                {{ displayableParentId.id }}
-              </li>
+  @defer {
+    <div class="multi-row-container">
+      <div class="row">
+        <label>Subject Model</label>
+      </div>
+      <div class="row">
+        <mat-card appearance="outlined" class="json-card">
+          <mat-card-header>
+            <mat-card-title>モデルA</mat-card-title>
+          </mat-card-header>
+          <pre>{{ modelA$ | async | json }}</pre>
+        </mat-card>
+        <mat-card appearance="outlined" class="json-card">
+          <mat-card-header>
+            <mat-card-title>モデルB</mat-card-title>
+          </mat-card-header>
+          <pre>{{ modelB$ | async | json }}</pre>
+        </mat-card>
+      </div>
+      <div class="row">
+        <!-- 親IDリスト -->
+        <mat-card appearance="outlined" class="scrollable-card">
+          <mat-card-header>
+            <mat-card-title>親ID</mat-card-title>
+          </mat-card-header>
+          <mat-card-content class="scrollable-container">
+            @if (modelA$ | async; as modelA) {
+              <ul>
+                @for (parentId of modelA.parentIds; track parentId) {
+                  <li>
+                    {{ parentId }}
+                    <button mat-button type="button" (click)="onClickRemoveIdButton('parent', parentId)">削除</button>
+                  </li>
+                }
+              </ul>
             }
-          </ul>
-        </mat-card-content>
-      </mat-card>
-      <!-- 子ID（最終表示）リスト -->
-      <mat-card appearance="outlined" class="scrollable-card">
-        <mat-card-header>
-          <mat-card-title>子ID（最終表示）</mat-card-title>
-        </mat-card-header>
-        <mat-card-content class="scrollable-container">
-          <ul>
-            @for (displayableChildId of displayableChildIds$ | async; track displayableChildId) {
-              <li [ngClass]="{ isDisabled: displayableChildId.isDisabled }">
-                {{ displayableChildId.id }}
-              </li>
+          </mat-card-content>
+          <mat-card-footer>
+            <mat-form-field class="id-input-field">
+              <input matInput type="number" [(ngModel)]="addingParentId" placeholder="追加親ID">
+            </mat-form-field>
+            <button mat-button [disabled]="addingParentId < 1" type="button" (click)="onClickAddIdButton('parent')">追加</button>
+          </mat-card-footer>
+        </mat-card>
+        <!-- 子IDリスト -->
+        <mat-card appearance="outlined" class="scrollable-card">
+          <mat-card-header>
+            <mat-card-title>子ID</mat-card-title>
+          </mat-card-header>
+          <mat-card-content class="scrollable-container">
+            @if (modelA$ | async; as modelA) {
+              <ul>
+                @for (chiledId of modelA.chiledIds; track chiledId) {
+                  <li>
+                    {{ chiledId }}
+                    <button mat-button type="button" (click)="onClickRemoveIdButton('child', chiledId)">削除</button>
+                  </li>
+                }
+              </ul>
             }
-          </ul>
-        </mat-card-content>
-      </mat-card>
+          </mat-card-content>
+          <mat-card-footer>
+            <mat-form-field class="id-input-field">
+              <input matInput type="number" [(ngModel)]="addingChildId" placeholder="追加子ID">
+            </mat-form-field>
+            <button mat-button [disabled]="addingChildId < 1" type="button" (click)="onClickAddIdButton('child')">追加</button>
+          </mat-card-footer>
+        </mat-card>
+        <!-- 無効IDリスト -->
+        <mat-card appearance="outlined" class="scrollable-card">
+          <mat-card-header>
+            <mat-card-title>無効ID</mat-card-title>
+          </mat-card-header>
+          <mat-card-content class="scrollable-container">
+            @if (modelB$ | async; as modelB) {
+              <ul>
+                @for (disableId of modelB.disableIds; track disableId) {
+                  <li>
+                    {{ disableId }}
+                    <button mat-button type="button" (click)="onClickRemoveIdButton('disable', disableId)">削除</button>
+                  </li>
+                }
+              </ul>
+            }
+          </mat-card-content>
+          <mat-card-footer>
+            <mat-form-field class="id-input-field">
+              <input matInput type="number" [(ngModel)]="addingDisableId" placeholder="追加無効ID">
+            </mat-form-field>
+            <button mat-button [disabled]="addingDisableId < 1" type="button" (click)="onClickAddIdButton('disable')">追加</button>
+          </mat-card-footer>
+        </mat-card>
+        <!-- 非表示IDリスト -->
+        <mat-card appearance="outlined" class="scrollable-card">
+          <mat-card-header>
+            <mat-card-title>非表示ID</mat-card-title>
+          </mat-card-header>
+          <mat-card-content class="scrollable-container">
+            @if (modelB$ | async; as modelB) {
+              <ul>
+                @for (hiddenId of modelB.hiddenIds; track hiddenId) {
+                  <li>
+                    {{ hiddenId }}
+                    <button mat-button type="button" (click)="onClickRemoveIdButton('hidden', hiddenId)">削除</button>
+                  </li>
+                }
+              </ul>
+            }
+          </mat-card-content>
+          <mat-card-footer>
+            <mat-form-field class="id-input-field">
+              <input matInput type="number" [(ngModel)]="addingHiddenId" placeholder="追加非表示ID">
+            </mat-form-field>
+            <button mat-button [disabled]="addingHiddenId < 1" type="button" (click)="onClickAddIdButton('hidden')">追加</button>
+          </mat-card-footer>
+        </mat-card>
+      </div>
+      <div class="row">
+        <!-- 親ID（最終表示）リスト -->
+        <mat-card appearance="outlined" class="scrollable-card">
+          <mat-card-header>
+            <mat-card-title>親ID（最終表示）</mat-card-title>
+          </mat-card-header>
+          <mat-card-content class="scrollable-container">
+            <ul>
+              @for (displayableParentId of displayableParentIds$ | async; track displayableParentId) {
+                <li [ngClass]="{ isDisabled: displayableParentId.isDisabled }">
+                  {{ displayableParentId.id }}
+                </li>
+              }
+            </ul>
+          </mat-card-content>
+        </mat-card>
+        <!-- 子ID（最終表示）リスト -->
+        <mat-card appearance="outlined" class="scrollable-card">
+          <mat-card-header>
+            <mat-card-title>子ID（最終表示）</mat-card-title>
+          </mat-card-header>
+          <mat-card-content class="scrollable-container">
+            <ul>
+              @for (displayableChildId of displayableChildIds$ | async; track displayableChildId) {
+                <li [ngClass]="{ isDisabled: displayableChildId.isDisabled }">
+                  {{ displayableChildId.id }}
+                </li>
+              }
+            </ul>
+          </mat-card-content>
+        </mat-card>
+      </div>
     </div>
-  </div>
+  }
 </div>
