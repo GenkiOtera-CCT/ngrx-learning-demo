@@ -19,7 +19,7 @@ jobs:
         node-version-file: package.json
 
     - name: Install Angular CLI
-      run: npm install -g @angular/cli@18
+      run: npm install -g @angular/cli
 
     - name: Install dependencies
       run: npm ci
