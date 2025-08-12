@@ -21,7 +21,7 @@
     </div>    
     <div class="row">
       <ul>
-        @for (requestStatus of requestStatuses; track requestStatus) {
+        @for (requestStatus of requestStatuses(); track requestStatus) {
           <li>{{ requestStatus }}</li>
         }
       </ul>
@@ -68,7 +68,7 @@
             <mat-form-field class="id-input-field">
               <input matInput type="number" [(ngModel)]="addingParentId" placeholder="追加親ID">
             </mat-form-field>
-            <button mat-button [disabled]="addingParentId < 1" type="button" (click)="onClickAddIdButton('parent')">追加</button>
+            <button mat-button [disabled]="addingParentId() < 1" type="button" (click)="onClickAddIdButton('parent')">追加</button>
           </mat-card-footer>
         </mat-card>
         <!-- 子IDリスト -->
@@ -92,7 +92,7 @@
             <mat-form-field class="id-input-field">
               <input matInput type="number" [(ngModel)]="addingChildId" placeholder="追加子ID">
             </mat-form-field>
-            <button mat-button [disabled]="addingChildId < 1" type="button" (click)="onClickAddIdButton('child')">追加</button>
+            <button mat-button [disabled]="addingChildId() < 1" type="button" (click)="onClickAddIdButton('child')">追加</button>
           </mat-card-footer>
         </mat-card>
         <!-- 無効IDリスト -->
@@ -116,7 +116,7 @@
             <mat-form-field class="id-input-field">
               <input matInput type="number" [(ngModel)]="addingDisableId" placeholder="追加無効ID">
             </mat-form-field>
-            <button mat-button [disabled]="addingDisableId < 1" type="button" (click)="onClickAddIdButton('disable')">追加</button>
+            <button mat-button [disabled]="addingDisableId() < 1" type="button" (click)="onClickAddIdButton('disable')">追加</button>
           </mat-card-footer>
         </mat-card>
         <!-- 非表示IDリスト -->
@@ -140,7 +140,7 @@
             <mat-form-field class="id-input-field">
               <input matInput type="number" [(ngModel)]="addingHiddenId" placeholder="追加非表示ID">
             </mat-form-field>
-            <button mat-button [disabled]="addingHiddenId < 1" type="button" (click)="onClickAddIdButton('hidden')">追加</button>
+            <button mat-button [disabled]="addingHiddenId() < 1" type="button" (click)="onClickAddIdButton('hidden')">追加</button>
           </mat-card-footer>
         </mat-card>
       </div>

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { PracticeContentsService } from '../../services/practice-contents.service';
 import { MatButtonModule } from '@angular/material/button';
 import { MessageResponse } from '../../interfaces/api';
@@ -28,103 +28,93 @@ import { Observable } from 'rxjs';
     styleUrls: ['./practice-contents.page.component.css']
 })
 export class PracticeContentsPageComponent {
+  private service = inject(PracticeContentsService);
 
-  requestStatuses: string[] = [];
-  successRate: number = 0;
+  readonly requestStatuses = signal<string[]>([]);
+  readonly successRate = signal(0);
 
-  modelA$ = this.service.modelA$;
-  modelB$ = this.service.modelB$;
-  displayableParentIds$:Observable<DisplayId[]> = this.service.getDisplayableParentIds();
-  displayableChildIds$:Observable<DisplayId[]> = this.service.getDisplayableChildIds();
+  readonly modelA$ = this.service.modelA$;
+  readonly modelB$ = this.service.modelB$;
+  readonly displayableParentIds$:Observable<DisplayId[]> = this.service.getDisplayableParentIds();
+  readonly displayableChildIds$:Observable<DisplayId[]> = this.service.getDisplayableChildIds();
 
-  addingParentId: number = 0;
-  addingChildId: number = 0;
-  addingDisableId: number = 0;
-  addingHiddenId: number = 0;
-
-  constructor(
-    private service: PracticeContentsService
-  ) {}
+  readonly addingParentId = signal(0);
+  readonly addingChildId = signal(0);
+  readonly addingDisableId = signal(0);
+  readonly addingHiddenId = signal(0);
 
   //#region HTTP
   onClickShortTimeRequestButton() : void {
-    this.requestStatuses = [];
-    this.requestStatuses.push(`リクエスト送信（ショート）`);
+    this.requestStatuses.set([`リクエスト送信（ショート）`]);
     this.service.getShortTimeRequest().subscribe({
       next: (response:MessageResponse) => {
-        this.requestStatuses.push(`レスポンス到着（ショート）: ${response.message}`);
+        this.requestStatuses.update((statuses) => [...statuses, `レスポンス到着（ショート）: ${response.message}`]);
       },
-      complete: () => this.requestStatuses.push('リクエスト完了（ショート）')
-    }
-  );
+      complete: () => this.requestStatuses.update((statuses) => [...statuses, 'リクエスト完了（ショート）'])
+    });
   }
 
   onClickLongTimeRequestButton() : void {
-    this.requestStatuses = [];
-    this.requestStatuses.push('リクエスト送信（ロング）');
+    this.requestStatuses.set(['リクエスト送信（ロング）']);
     this.service.getLongTimeRequest().subscribe({
       next: (response:MessageResponse) => {
-        this.requestStatuses.push(`レスポンス到着（ロング）: ${response.message}`);
+        this.requestStatuses.update((statuses) => [...statuses, `レスポンス到着（ロング）: ${response.message}`]);
       },
-      complete: () => this.requestStatuses.push('リクエスト完了（ロング）')
+      complete: () => this.requestStatuses.update((statuses) => [...statuses, 'リクエスト完了（ロング）'])
     });
   }
 
   onClickOrderedRequestButton() : void {
-    this.requestStatuses = [];
-    this.requestStatuses.push('リクエスト送信（順序）');
+    this.requestStatuses.set(['リクエスト送信（順序）']);
     let count: number = 1;
     this.service.getOrderedRequest().subscribe({
       next: (response:MessageResponse) => {
-        this.requestStatuses.push(`レスポンス到着（${count}つ目）: ${response.message}`);
+        this.requestStatuses.update((statuses) => [...statuses, `レスポンス到着（${count}つ目）: ${response.message}`]);
         count++;
       },
-      complete: () => this.requestStatuses.push('リクエスト完了（順序）')
+      complete: () => this.requestStatuses.update((statuses) => [...statuses, 'リクエスト完了（順序）'])
     });
   }
 
   onClickJoinedRequestButton() : void {
-    this.requestStatuses = [];
-    this.requestStatuses.push('リクエスト送信（結合）');
+    this.requestStatuses.set(['リクエスト送信（結合）']);
     this.service.getJoinedRequest().subscribe({
       next: (responses:[MessageResponse, MessageResponse]) => {
         const combinedMessage = responses.map((response) => response.message).join(' & ');
-        this.requestStatuses.push(`レスポンス到着（まとめて）: ${combinedMessage}`);
+        this.requestStatuses.update((statuses) => [...statuses, `レスポンス到着（まとめて）: ${combinedMessage}`]);
       },
-      complete: () => this.requestStatuses.push('リクエスト完了（結合）')
+      complete: () => this.requestStatuses.update((statuses) => [...statuses, 'リクエスト完了（結合）'])
     });
   }
 
   onClickErrorRequestButton() : void {
-    this.requestStatuses = [];
-    this.requestStatuses.push('リクエスト送信（エラー）');
+    this.requestStatuses.set(['リクエスト送信（エラー）']);
     this.service.getErrorRequest().subscribe({
       next: (response:any) => {
-        this.requestStatuses.push(`レスポンス到着（エラー）: ${response.message}`);
+        this.requestStatuses.update((statuses) => [...statuses, `レスポンス到着（エラー）: ${response.message}`]);
       },
-      error: () => this.requestStatuses.push('エラー発生'),
-      complete: () => this.requestStatuses.push('リクエスト完了（エラー）')
+      error: () => this.requestStatuses.update((statuses) => [...statuses, 'エラー発生']),
+      complete: () => this.requestStatuses.update((statuses) => [...statuses, 'リクエスト完了（エラー）'])
     });
   }
 
   onClickFragileRequestButton(withRetry:boolean = false) : void {
-    this.requestStatuses = [];
-    this.requestStatuses.push('リクエスト送信（不安定）');
+    this.requestStatuses.set(['リクエスト送信（不安定）']);
     if (withRetry) {
-      this.service.getErrorRequestWithRetry(this.successRate).subscribe({
+      this.service.getErrorRequestWithRetry(this.successRate()).subscribe({
         next: (response:MessageResponse) => {
-          this.requestStatuses.push(`レスポンス到着（不安定）: ${response.message}`);
+          this.requestStatuses.update((statuses) => [...statuses, `レスポンス到着（不安定）: ${response.message}`]);
         },
-        error: () => this.requestStatuses.push('エラー発生'),
-        complete: () => this.requestStatuses.push('リクエスト完了（不安定）')
+        error: () => this.requestStatuses.update((statuses) => [...statuses, 'エラー発生']),
+        complete: () => this.requestStatuses.update((statuses) => [...statuses, 'リクエスト完了（不安定）'])
       });
     } else {
-      this.service.getFragileRequest(this.successRate).subscribe({
+      this.service.getFragileRequest(this.successRate()).subscribe({
         next: (response:MessageResponse) => {
-          this.requestStatuses.push(`レスポンス到着（不安定）: ${response.message}`);
+          this.requestStatuses.update((statuses) => [...statuses, `レスポンス到着（不安定）: ${response.message}`]);
         },
-        error: () => this.requestStatuses.push('エラー発生'),
-        complete: () => this.requestStatuses.push('リクエスト完了（不安定）')
+        error: () => this.requestStatuses.update((statuses) => [...statuses, 'エラー発生']),
+        complete: () => this.requestStatuses.update((statuses) => [...statuses, 'リクエスト完了（不安定）'])
       });
     }
   }
@@ -134,19 +124,19 @@ export class PracticeContentsPageComponent {
   onClickAddIdButton(idType:string) : void {
     switch (idType) {
       case 'parent':
-        this.service.addParentId(this.addingParentId);
+        this.service.addParentId(this.addingParentId());
         break;
       case 'child':
-        if(this.addingChildId < 1) return;
-        this.service.addChildId(this.addingChildId);
+        if(this.addingChildId() < 1) return;
+        this.service.addChildId(this.addingChildId());
         break;
       case 'disable':
-        if(this.addingDisableId < 1) return;
-        this.service.addDisableId(this.addingDisableId);
+        if(this.addingDisableId() < 1) return;
+        this.service.addDisableId(this.addingDisableId());
         break;
       case 'hidden':
-        if(this.addingHiddenId < 1) return;
-        this.service.addHiddenId(this.addingHiddenId);
+        if(this.addingHiddenId() < 1) return;
+        this.service.addHiddenId(this.addingHiddenId());
         break;
     }
   }

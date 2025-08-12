@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { MessageResponse } from '../interfaces/api';
@@ -7,10 +7,7 @@ import { MessageResponse } from '../interfaces/api';
   providedIn: 'root'
 })
 export class RepositoryService {
-
-  constructor(
-    private http: HttpClient
-  ) { }
+  private http = inject(HttpClient);
 
   getShortTimeRequest() : Observable<MessageResponse> {
     return this.http.get<MessageResponse>('/api/short');

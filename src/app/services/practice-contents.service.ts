@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { RepositoryService } from './repository.service';
 import { BehaviorSubject, Observable, combineLatest, concat, forkJoin, map, retry } from 'rxjs';
 import { MessageResponse } from '../interfaces/api';
@@ -8,8 +8,9 @@ import { DisplayId, ModelA, ModelB } from '../interfaces/';
   providedIn: 'root'
 })
 export class PracticeContentsService {
+  private readonly repository = inject(RepositoryService);
 
-  modelA$ = new BehaviorSubject<ModelA>({
+  readonly modelA$ = new BehaviorSubject<ModelA>({
     id: 17,
     type: 'Main',
     parentIds: [1, 4, 5, 9],
@@ -17,7 +18,7 @@ export class PracticeContentsService {
     isDeleted: false
   });
 
-  modelB$ = new BehaviorSubject<ModelB>({
+  readonly modelB$ = new BehaviorSubject<ModelB>({
     id: 439,
     type: 'Sub',
     disableIds: [4, 9, 37],
@@ -25,9 +26,6 @@ export class PracticeContentsService {
     isDeleted: false
   });
 
-  constructor(
-    private repository: RepositoryService
-  ) {}
   //#region HTTP
   getShortTimeRequest() : Observable<MessageResponse> {
     return this.repository.getShortTimeRequest();
