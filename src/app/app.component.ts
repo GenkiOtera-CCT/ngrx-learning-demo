@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { MatButtonToggleChange, MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { Router, RouterOutlet } from '@angular/router';
@@ -21,7 +21,7 @@ import { Router, RouterOutlet } from '@angular/router';
           [hideSingleSelectionIndicator]="true"
           (change)="onChangeChildRoute($event)"
         >
-          @for (childRoute of childRoutes; track childRoute) {
+          @for (childRoute of childRoutes(); track childRoute) {
             <mat-button-toggle [value]="childRoute">{{ childRoute }}</mat-button-toggle>
           }
         </mat-button-toggle-group>
@@ -47,18 +47,18 @@ import { Router, RouterOutlet } from '@angular/router';
 })
 export class AppComponent {
   
-  childRoutes: string[] = [
+  readonly childRoutes = signal([
     'basic',
     'practice',
-  ];
-  selectedChildRoute: string;
+  ]);
+  readonly selectedChildRoute = signal<string | null>(null);
 
   constructor(
     private router: Router
   ) {
     const paths:string[] = window.location.href.split('/');
     const lastPath:string = paths[paths.length - 1];
-    this.selectedChildRoute = this.childRoutes.includes(lastPath) ? lastPath : this.childRoutes[0];
+    this.selectedChildRoute.set(this.childRoutes().includes(lastPath) ? lastPath : this.childRoutes()[0]);
   }
 
   onChangeChildRoute(event: MatButtonToggleChange) {
