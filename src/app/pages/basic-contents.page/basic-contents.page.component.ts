@@ -1,4 +1,4 @@
-import { Component, OnDestroy } from '@angular/core';
+import { Component, inject, model, OnDestroy, signal } from '@angular/core';
 import { Subject, Subscription } from 'rxjs';
 import { MatSelectChange } from '@angular/material/select';
 import { Crew } from '../../interfaces/crew';
@@ -25,59 +25,46 @@ import { MatSelectModule } from '@angular/material/select';
     styleUrl: './basic-contents.page.component.css'
 })
 export class BasicContentsPageComponent implements OnDestroy {
-  simpleObservableState: number = 0;
-  isMultiSubscribing: boolean = false;
-  simpleObserveText: string;
-  anotherSimpleObserveText: string;
-  
-  simpleSubjectState: number = 0;
-  simpleSubjectText: string;
-  simpleSubjectInputMessagge: string = '';
 
-  behaviorSubjectState: number = 0;
-  behaviorSubjectText: string;
-  behaviorSubjectInputMessagge: string = '';
+  // 待機時間を同期するために敢えてpublicにしているので、参考にしないように。
+  readonly service = inject(BasicContentsService);
 
-  simpleSubject$: Subject<string>;
+  readonly simpleObservableState = model(0);
+  readonly isMultiSubscribing = model(false);
+  readonly simpleObserveText = signal(this.service.initialText);
+  readonly anotherSimpleObserveText = signal(`マルチ：${this.service.initialText}`);
 
-  eventValue?: number;
-  crews: Crew[] = [
+  readonly simpleSubjectState = signal(0);
+  readonly simpleSubjectText = signal(this.service.initialText);
+  readonly simpleSubjectInputMessagge = signal('');
+
+  readonly behaviorSubjectState = signal(0);
+  readonly behaviorSubjectText = signal(this.service.initialText);
+  readonly behaviorSubjectInputMessagge = signal('');
+
+  readonly simpleSubject$: Subject<string> = this.service.simpleSubject$;
+
+  readonly eventValue = signal<number | null>(null);
+  readonly crews: Crew[] = [
     {id: 0, name: 'ルフィ'},
     {id: 1, name: 'ゾロ'},
     {id: 2, name: 'ナミ'}
   ];
-  selectedCrewId?: number;
-  isShowTheMan: boolean = false;
+  readonly selectedCrewId = signal<number | null>(null);
+  readonly isShowTheMan = signal(false);
 
-  private subscriptions: Subscription[] = [];
-
-  constructor(
-    // 待機時間を同期するために敢えてpublicにしているので、参考にしないように。
-    public service: BasicContentsService
-  ) {
-    this.simpleObserveText = service.initialText;
-    this.anotherSimpleObserveText = `マルチ：${service.initialText}`;
-
-    this.simpleSubjectText = service.initialText;
-    this.behaviorSubjectText = service.initialText;
-
-    this.simpleSubject$ = service.simpleSubject$;
-
+  private readonly subscriptions: Subscription[] = [
     // filterオペレーターの有無で１と２で渡ってくるイベントの違いが分かる。
     // １：filterオペレーターなし
-    this.subscriptions.push(
-      service.subjectWithPipe$.subscribe((value:number) => {
-        this.selectedCrewId = value;
-      })
-    );
+    this.service.subjectWithPipe$.subscribe((value:number) => {
+      this.selectedCrewId.set(value);
+    }),
     // ２：filterオペレーターあり
-    this.subscriptions.push(
-      service.filteredBehaviorSubject$.subscribe((value:number) => {
-        this.eventValue = value;
-        this.isShowTheMan = true;
-      })
-    );
-  }
+    this.service.filteredBehaviorSubject$.subscribe((value:number) => {
+      this.eventValue.set(value);
+      this.isShowTheMan.set(true);
+    }),
+  ];
 
   ngOnDestroy(): void {
     this.subscriptions.forEach(subscription => subscription.unsubscribe());
@@ -85,7 +72,7 @@ export class BasicContentsPageComponent implements OnDestroy {
   
   onClickStartSimpleObserve(withError:boolean = false): void {
     let changeCount: number = 0;
-    this.simpleObservableState = 1;
+    this.simpleObservableState.set(1);
 
     // 途中でエラーを発生させるかどうか
     this.service.withErrorSimpleObservable = withError;
@@ -94,26 +81,26 @@ export class BasicContentsPageComponent implements OnDestroy {
     this.service.simpleObservable$.subscribe({
       next: (value) => {
         changeCount++; // マルチの方にも影響するため、ここでインクリメント
-        this.simpleObserveText = `${changeCount}: ${value}`;
+        this.simpleObserveText.set(`${changeCount}: ${value}`);
       },
       error: (error) => {
-        this.simpleObservableState = 99;
-        this.simpleObserveText = `${error} （待機中）`;
+        this.simpleObservableState.set(99);
+        this.simpleObserveText.set(`${error} （待機中）`);
       },
       complete: () => {
-        this.simpleObservableState = 0;
-        this.simpleObserveText = this.service.initialText;
+        this.simpleObservableState.set(0);
+        this.simpleObserveText.set(this.service.initialText);
       }
     });
     // このようにsubscribeすると、同じObservableを複数回subscribeすることができる。
-    if(this.isMultiSubscribing) {
+    if(this.isMultiSubscribing()) {
       setTimeout(() => {
         this.service.simpleObservable$.subscribe({
           next: (value) => {
-            this.anotherSimpleObserveText = `マルチ -> ${changeCount}: ${value}`;
+            this.anotherSimpleObserveText.set(`マルチ -> ${changeCount}: ${value}`);
           },
           complete: () => {
-            this.anotherSimpleObserveText = `マルチ：${this.service.initialText}`;
+            this.anotherSimpleObserveText.set(`マルチ：${this.service.initialText}`);
           }
         });
       }, 300);
@@ -123,27 +110,27 @@ export class BasicContentsPageComponent implements OnDestroy {
   //#region SimpleSubject
   onClickStartSubscribeSimpleSubject(): void {
     let changeCount: number = 1;
-    this.simpleSubjectText = `${changeCount}: サブスクライブ中`;
+    this.simpleSubjectText.set(`${changeCount}: サブスクライブ中`);
     // subscribeすることでSubjectが動き出す
     this.service.simpleSubject$.subscribe({
       next: (value) => {
-        this.simpleSubjectState = 1;
-        this.simpleSubjectText = `${changeCount}: ${value}`;
+        this.simpleSubjectState.set(1);
+        this.simpleSubjectText.set(`${changeCount}: ${value}`);
         changeCount++;
       },
       error: (error) => {
-        this.simpleSubjectState = 99;
-        this.simpleSubjectText = error;
+        this.simpleSubjectState.set(99);
+        this.simpleSubjectText.set(error);
       },
       complete: () => {
-        this.simpleSubjectState = 2;
-        this.simpleSubjectText = '終了（※再利用不可）';
+        this.simpleSubjectState.set(2);
+        this.simpleSubjectText.set('終了（※再利用不可）');
       }
     });
   }
 
   onClickSendMessageToSimpleSubject(): void {
-    this.service.updateSimpleSubject(this.simpleSubjectInputMessagge);
+    this.service.updateSimpleSubject(this.simpleSubjectInputMessagge());
   }
 
   onClickGenerateErrorToSimpleSubject(): void {
@@ -167,20 +154,20 @@ export class BasicContentsPageComponent implements OnDestroy {
       // 値を保持していることを表現するために、初回のnextでは画像を変更しないようにしている。
       next: (value) => {
         if(changeCount > 1) {
-          this.behaviorSubjectState = 1;
+          this.behaviorSubjectState.set(1);
         }
-        this.behaviorSubjectText = `${changeCount}: ${value}`;
+        this.behaviorSubjectText.set(`${changeCount}: ${value}`);
         changeCount++;
       },
       complete: () => {
-        this.behaviorSubjectState = 2;
-        this.behaviorSubjectText = '終了（※再利用不可）';
+        this.behaviorSubjectState.set(2);
+        this.behaviorSubjectText.set('終了（※再利用不可）');
       }
     });
   }
 
   onClickSendMessageToBehaviorSubject(): void {
-    this.service.updateBehaviorSubject(this.behaviorSubjectInputMessagge);
+    this.service.updateBehaviorSubject(this.behaviorSubjectInputMessagge());
   }
 
   /**
@@ -194,9 +181,9 @@ export class BasicContentsPageComponent implements OnDestroy {
 
   //#region Filter pipe operators
   onClickResetSelectedCrew(): void {
-    this.selectedCrewId = undefined;
-    this.eventValue = undefined;
-    this.isShowTheMan = false;
+    this.selectedCrewId.set(null);
+    this.eventValue.set(null);
+    this.isShowTheMan.set(false);
   }
 
   onSelectionCrewChange(event:MatSelectChange): void {

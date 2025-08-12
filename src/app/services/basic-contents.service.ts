@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, signal, WritableSignal } from '@angular/core';
 import { BehaviorSubject, Observable, Subject, Subscriber, filter } from 'rxjs';
 
 @Injectable({
@@ -7,7 +7,7 @@ import { BehaviorSubject, Observable, Subject, Subscriber, filter } from 'rxjs';
 export class BasicContentsService {
 
   readonly initialText: string = '0: 待機中';
-  waitInterval: number = 1;
+  readonly waitInterval: WritableSignal<number> = signal(1);
   withErrorSimpleObservable: boolean = false;
 
   //#region サンプル用のObservableの定義（ただのObservableは事前にsubscribeされた際の処理を定義する）
@@ -82,7 +82,7 @@ export class BasicContentsService {
             observer.next(message);
             index++;
             resolve();
-          }, this.waitInterval * 1000);
+          }, this.waitInterval() * 1000);
         });
       } catch (error) {
         observer.error(error);
@@ -97,7 +97,7 @@ export class BasicContentsService {
       setTimeout(() => {
         observer.complete();
         resolve();
-      }, this.waitInterval * 1000);
+      }, this.waitInterval() * 1000);
     });
   }
 }

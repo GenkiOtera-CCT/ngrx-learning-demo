@@ -9,23 +9,23 @@
         <mat-label>インターバル時間（秒）</mat-label>
         <input matInput type="number" [(ngModel)]="service.waitInterval" placeholder="Wait interval seconds">
       </mat-form-field>
-      <mat-slide-toggle [(ngModel)]="isMultiSubscribing" [disabled]="simpleObservableState === 1">マルチ</mat-slide-toggle>
-      <button mat-stroked-button type="button" [disabled]="simpleObservableState === 1" (click)="onClickStartSimpleObserve()">サブスクライブ開始</button>
-      <button mat-stroked-button type="button" [disabled]="simpleObservableState === 1" (click)="onClickStartSimpleObserve(true)">+ エラー発生 Ver</button>
+      <mat-slide-toggle [(ngModel)]="isMultiSubscribing" [disabled]="simpleObservableState() === 1">マルチ</mat-slide-toggle>
+      <button mat-stroked-button type="button" [disabled]="simpleObservableState() === 1" (click)="onClickStartSimpleObserve()">サブスクライブ開始</button>
+      <button mat-stroked-button type="button" [disabled]="simpleObservableState() === 1" (click)="onClickStartSimpleObserve(true)">+ エラー発生 Ver</button>
     </div>
     <div class="row">
-      @if (simpleObservableState === 1) {
+      @if (simpleObservableState() === 1) {
         <img src="assets/images/speak-man.png" alt="speake-man">
-      } @else if (simpleObservableState === 99) {
+      } @else if (simpleObservableState() === 99) {
         <img src="assets/images/out-of-order.png" alt="out of order">
         <img src="assets/images/wait-man.png" alt="wait-man">
       } @else {
         <img src="assets/images/wait-man.png" alt="wait-man">
       }
       <div class="message-container">
-        <label>{{ simpleObserveText }}</label>
-        @if (isMultiSubscribing) {
-          <label>{{ anotherSimpleObserveText }}</label>
+        <label>{{ simpleObserveText() }}</label>
+        @if (isMultiSubscribing()) {
+          <label>{{ anotherSimpleObserveText() }}</label>
         }
       </div>
     </div>
@@ -45,16 +45,16 @@
       <button mat-stroked-button type="button" (click)="onClickFinishSimpleSubject()">終了</button>
     </div>
     <div class="row">
-      @if (simpleSubjectState === 1) {
+      @if (simpleSubjectState() === 1) {
         <img src="assets/images/speak-woman.png" alt="speake-woman">
-      } @else if (simpleSubjectState === 2) {
+      } @else if (simpleSubjectState() === 2) {
         <img src="assets/images/finished.png" alt="vacancy">
-      } @else if (simpleSubjectState === 99) {
+      } @else if (simpleSubjectState() === 99) {
         <img src="assets/images/out-of-order.png" alt="out of order">
       } @else {
         <img src="assets/images/wait-woman.png" alt="wait-woman">
       }
-      <label>{{ simpleSubjectText }}</label>
+      <label>{{ simpleSubjectText() }}</label>
     </div>
   </div>
   
@@ -85,14 +85,14 @@
         <button mat-stroked-button type="button" (click)="onClickFinishBehaviorSubject()">終了</button>
       </div>
       <div class="row">
-        @if (behaviorSubjectState === 1) {
+        @if (behaviorSubjectState() === 1) {
           <img src="assets/images/speak-assistant.png" alt="speake-assistant">
-        } @else if (behaviorSubjectState === 2) {
+        } @else if (behaviorSubjectState() === 2) {
           <img src="assets/images/finished.png" alt="vacancy">
         } @else {
           <img src="assets/images/wait-assistant.png" alt="wait-assistant">
         }
-        <label>{{ behaviorSubjectText }}</label>
+        <label>{{ behaviorSubjectText() }}</label>
       </div>
     </div>
   }
@@ -115,8 +115,8 @@
         <button mat-stroked-button type="button" (click)="onClickResetSelectedCrew()">選択リセット</button>
       </div>
       <div class="row">
-        <label>選択が変更されたイベントの結果：{{ selectedCrewId ?? 'null' }}</label>
-        @switch (selectedCrewId) {
+        <label>選択が変更されたイベントの結果：{{ selectedCrewId() ?? 'null' }}</label>
+        @switch (selectedCrewId()) {
           @case (0) {
             <img src="assets/images/luffy.png" alt="luffy">
           }
@@ -129,8 +129,8 @@
         }
       </div>
       <div class="row">
-        <label>フィルタリングされたイベントの結果：{{ eventValue ?? 'null' }}</label>
-        @if (isShowTheMan) {
+        <label>フィルタリングされたイベントの結果：{{ eventValue() ?? 'null' }}</label>
+        @if (isShowTheMan()) {
           <img src="assets/images/sanji.png" alt="sanji">
         }
       </div>
